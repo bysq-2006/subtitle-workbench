@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         字幕工作台
-// @namespace    subtitle-workbench
-// @version      2.4.0
-// @description  提取、翻译并加载网页视频字幕；按页面自动缓存，支持普通与全屏播放
+// @name         Coursera 字幕工作台
+// @namespace    codex-local
+// @version      2.3.0
+// @description  提取、翻译并加载 Coursera 字幕；按课程集数自动缓存，支持普通与全屏播放
 // @match        *://*/*
 // @run-at       document-idle
 // @grant        GM_setClipboard
@@ -82,7 +82,7 @@
   const panel = document.createElement('section');
   panel.id = `${PREFIX}-panel`;
   panel.innerHTML = `
-    <div id="${PREFIX}-head"><strong>字幕工作台</strong><button id="${PREFIX}-close" title="关闭">×</button></div>
+    <div id="${PREFIX}-head"><strong>Coursera 字幕工作台</strong><button id="${PREFIX}-close" title="关闭">×</button></div>
     <div id="${PREFIX}-body">
       <div class="${PREFIX}-row"><label for="${PREFIX}-title">视频/课程标题</label><input id="${PREFIX}-title"></div>
       <div class="${PREFIX}-row">
@@ -91,7 +91,7 @@
         <button id="${PREFIX}-extract" class="${PREFIX}-primary">识别原字幕</button>
         <button id="${PREFIX}-copy">复制“标题 + 提示词 + 字幕”</button>
       </div>
-      <div id="${PREFIX}-status">请先播放视频，并在播放器中打开一种字幕。</div>
+      <div id="${PREFIX}-status">请先播放视频，并在 Coursera 中打开一种字幕。</div>
       <label for="${PREFIX}-source"><b>提取到的原字幕</b></label>
       <textarea id="${PREFIX}-source" placeholder="识别后会在这里显示完整 SRT 字幕"></textarea>
       <div class="${PREFIX}-row"><b>把 AI 返回的完整 SRT/VTT 粘贴到下面，然后点击应用：</b></div>
@@ -153,7 +153,7 @@
       }));
       return true;
     } catch (error) {
-      console.warn('字幕自动保存失败：', error);
+      console.warn('Coursera 字幕自动保存失败：', error);
       return false;
     }
   }
@@ -195,7 +195,7 @@
       'main h1', 'main h2', 'h1'
     ];
     const heading = selectors.map(s => document.querySelector(s)?.textContent?.trim()).find(Boolean);
-    return heading || document.title.replace(/\s*[|\-–—]\s*.+$/, '').trim() || '当前视频';
+    return heading || document.title.replace(/\s*\|\s*Coursera.*$/i, '').trim() || 'Coursera 视频';
   }
 
   function formatTime(seconds) {
@@ -259,7 +259,7 @@
       option.textContent = `${track.label || '未命名'} / ${track.language || '未知语言'}（${track.cues?.length || 0} 条）`;
       select.appendChild(option);
     });
-    status(select.options.length ? `发现 ${select.options.length} 条字幕轨道，请选择原语言轨道。` : '没有发现字幕轨道。请先在播放器中打开字幕，再点击“刷新轨道”。');
+    status(select.options.length ? `发现 ${select.options.length} 条字幕轨道，请选择原语言轨道。` : '没有发现字幕轨道。请先在 Coursera 播放器中打开字幕，再点击“刷新轨道”。');
   }
 
   async function extractSelectedTrack() {
